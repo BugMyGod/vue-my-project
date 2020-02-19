@@ -59,21 +59,33 @@ export const constantRoutes = [
   {
     path: '/mind',
     component: Layout,
-    redirect: '/mind/kityminder',
+    redirect: '/mind/kityminderCode',
     name: 'Mind',
     meta: { title: '脑图', icon: 'example' },
     children: [
       {
-        path: 'kityminder',
-        name: 'KityMinder',
-        component: () => import('@/views/mind/kityminder/index'),
-        meta: { title: 'KityMinder', icon: 'table' }
+        path: 'kityminderCode',
+        name: 'kityminderCode',
+        component: () => import('@/views/mind/kityminderCode/index'),
+        meta: { title: 'kityminderCode', icon: 'table' }
       },
       {
         path: 'gojs',
         name: 'GoJs',
         component: () => import('@/views/mind/gojs/index'),
         meta: { title: 'GoJs', icon: 'tree' }
+      },
+      {
+        path: 'joint',
+        name: 'Joint',
+        component: () => import('@/views/mind/joint/index'),
+        meta: { title: 'jointJs', icon: 'tree' }
+      },
+      {
+        path: 'd3js',
+        name: 'D3js',
+        component: () => import('@/views/mind/d3js/index'),
+        meta: { title: 'd3Js', icon: 'tree' }
       }
     ]
   },

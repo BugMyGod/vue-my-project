@@ -1,0 +1,12 @@
+1,  Panels是将其他GraphObjects作为其元素的GraphObjects。
+    一个Panel指定了其所包含元素的大小和位置。
+    每个Panel有自己的坐标系统。
+    Panel中的元素根据绘画顺序来确定zindex的顺序
+
+2, Data Binding 数据绑定
+  new go.Binding('source', 'img') // new go.Binding() 绑定属性，dataList中的img==>source
+  new go.Binding("location", "loc", go.Point.parse),  // convert string into a Point value
+
+
+3, 双向数据绑定
+  
