@@ -78,19 +78,20 @@ export default {
     })
     console.log(_that.myDiagram)
 
-    // // 监听事件
-    // _that.myDiagram.addDiagramListener('ObjectSingleClicked', function(e) {
-    //   debugger
-    //   console.log(e.subject.part)
-    // })
-    // _that.myDiagram.addDiagramListener('BackgroundSingleClicked', function(e) {
-    //   debugger
-    //   console.log('Double-clicked at' + e.diagram.lastInput.documentPoint)
-    // })
-    // _that.myDiagram.addDiagramListener('ClipboardPasted', function(e) {
-    //   debugger
-    //   console.log('Pasted' + e.diagram.selection.count + 'parts')
-    // })
+    // 监听事件:单击 （）
+    _that.myDiagram.addDiagramListener('ObjectSingleClicked', function(e) {
+      // debugger
+      console.log('ObjectSingleClicked==', e.subject.part)
+    })
+    // 画布单击
+    _that.myDiagram.addDiagramListener('BackgroundSingleClicked', function(e) {
+      // debugger
+      console.log('Double-clicked at' + e.diagram.lastInput.documentPoint)
+    })
+    _that.myDiagram.addDiagramListener('ClipboardPasted', function(e) {
+      // debugger
+      console.log('Pasted' + e.diagram.selection.count + 'parts')
+    })
 
     // 定义个简单的 Node 模板
     _that.myDiagram.nodeTemplate = _that.goObj(
@@ -106,6 +107,11 @@ export default {
         height: 300
       }),
       'Auto', // Vertical,Auto,Horizontal
+      { // 节点继承Part的属性定义,例如
+        movable: false, // 禁止拖动
+        deletable: true// 禁止删除
+        // 节点的属性定义也写在这
+      },
       _that.goObj(
         go.Panel,
         'Horizontal',
@@ -122,12 +128,18 @@ export default {
       ),
       // 节点范围内部事件
       {
+        cursor: 'pointer', // 改变鼠标样式变成小手
+        doubleClick: function(e, node) {
+          // 双击事件,输出节点数据
+          console.log(node.part.data)
+        },
         mouseEnter: function(e, node, prev) {
           console.log('mouseEnter')
         },
         mouseLeave: function(e, node, prev) {
           _that.detailShow = false
-        }
+        },
+        selectionChanged: _that.nodeSelectionChanged
       }
     )
 
@@ -185,6 +197,48 @@ export default {
       const myModel = this.goObj(go.TreeModel)
       myModel.nodeDataArray = this.dataList
       this.myDiagram.model = myModel
+    },
+    nodeSelectionChanged(node) {
+      console.log('node123====', node)
+      if (node.isSelected) {
+        console.log('key===', node.key) // 节点的属性信息
+        console.log('node.data.key===', node.data.key) // 拿到节点的Key,拿其他属性类似
+
+        this.$confirm('是否删除该节点?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // 删除节点
+          this.myDiagram.model.removeNodeData(node.key)
+          this.dataList.map((value, index) => {
+            if (node.key === value.key) {
+              this.dataList.splice(index, 1)
+            }
+          })
+          this.makeFun()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      }
+      // if (node.isSelected) {
+      //   // 节点选中执行的内容
+      //   console.log(node.data)// 节点的属性信息
+      //   console.log(node.data.key)// 拿到节点的Key,拿其他属性类似
+      //   var node1 = this.myDiagram.model.findNodeDataForKey(node.data.key)
+      //   this.myDiagram.model.setDataProperty(node1, 'fill', '#ededed')
+      // } else {
+      //   // 节点取消选中执行的内容
+      //   var node1 = this.myDiagram.model.findNodeDataForKey(node.data.key)
+      //   this.myDiagram.model.setDataProperty(node1, 'fill', '1F4963 ')
+      // }
     }
   }
 }

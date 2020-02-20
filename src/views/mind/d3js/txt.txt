@@ -1,0 +1,2 @@
+1，缩放：d3.behavior.zoom().scaleExtent
+2，

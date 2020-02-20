@@ -1,5 +1,6 @@
 <template>
   <div class="register">
+    <h3>d3</h3>
     <el-container>
       <div id="treeId" class="tree-svg" />
     </el-container>
@@ -20,25 +21,22 @@ export default {
       root: {
         'name': 'flare',
         'size': '1',
-        'image': 'https://wx3.sinaimg.cn/mw690/6405dd36gy1gc2133877dj21ok2cskjm.jpg',
-        'children': [
-          {
-            'name': 'AAA',
-            'size': '11',
-            'image': 'https://wx4.sinaimg.cn/mw690/c46b3efaly1gc24s5qnskj21400u0qv5.jpg'
-          },
-          {
-            'name': 'BBB',
-            'size': '12',
-            'image': 'https://wx1.sinaimg.cn/mw690/77de9208ly1gc1qwcage3j20hs0m8mxm.jpg'
-          }
-        ]
+        'image': '../../../assets/img1.png',
+        'children': [{
+          'name': 'AAA',
+          'size': '11',
+          'image': '../../../assets/img2.png'
+        }, {
+          'name': 'BBB',
+          'size': '12',
+          'image': '../../../assets/img1.png'
+        }]
       },
       tree: null,
       zm: null,
-      height: 650,
+      height: 750,
       count: 0,
-      duration: 600
+      duration: 800
     }
   },
   computed: {
@@ -46,21 +44,19 @@ export default {
   },
   created() {
     var that = this
-    // eslint-disable-next-line eqeqeq
-    var tree = d3.layout.tree().nodeSize([200, 400]).separation(function(a, b) { return (a.parent == b.parent ? 1.1 : 1.1) })
+    var tree = d3.layout.tree().nodeSize([300, 400])
     that.tree = tree
   },
   mounted() {
     var that = this
-    var svg = d3.select('#treeId').append('svg').attr('width', 1200).attr('height', 600)
-      .call(that.zm = d3.behavior.zoom().scaleExtent([1, 4]))
+    var svg = d3.select('#treeId').append('svg').attr('width', 960).attr('height', 650)
       .call(that.zm = d3.behavior.zoom().scaleExtent([1, 3]).on('zoom', d => { svg.attr('transform', 'translate(' + d3.event.translate + ')') }))
       .append('g')
-      .attr('transform', 'translate(' + 480 + ',' + 100 + ')')
+      .attr('transform', 'translate(' + 480 + ',' + 50 + ')')
 
-    that.zm.translate([100, 200])
+    that.zm.translate([512, 50])
     that.svg = svg
-    that.root.x0 = 110
+    that.root.x0 = 0
     that.root.y0 = that.height / 2
 
     function collapse(d) {
@@ -72,6 +68,7 @@ export default {
     }
     // Initialize the display to show a few nodes.
     that.root.children.forEach(collapse)
+
     that.update(that.root)
   },
   methods: {
@@ -82,9 +79,7 @@ export default {
       var links = that.tree.links(nodes)
 
       // Normalize for fixed-depth.
-      nodes.forEach(function(d) {
-        d.y = d.depth * 300
-      })
+      nodes.forEach(function(d) { d.y = d.depth * 180 })
       // Update the nodes…
       var node = that.svg.selectAll('g.node')
         .data(nodes, function(d) { return d.id || (d.id = ++that.count) })
@@ -102,16 +97,16 @@ export default {
           return d.image
         })
         .attr('x', d => {
-          return d.children || d._children ? -100 : -100
+          return d.children || d._children ? -25 : -25
         })
-        .attr('y', -100)
+        .attr('y', -50)
 
-      // nodeEnter.append('text')
-      //   .attr('x', function(d) { return d.children || d._children ? -200 : -20 })
-      //   .attr('y', '15')
-      //   .attr('font-size', '18px')
-      //   .text(function(d) { return d.name })
-      //   .style('fill-opacity', 1e-6)
+      nodeEnter.append('text')
+        .attr('x', function(d) { return d.children || d._children ? -20 : -20 })
+        .attr('y', '15')
+        .attr('font-size', '18px')
+        .text(function(d) { return d.name })
+        .style('fill-opacity', 1e-6)
 
       // Transition nodes to their new position.
       var nodeUpdate = node.transition()
@@ -119,8 +114,8 @@ export default {
         .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')' })
 
       nodeUpdate.selectAll('image')
-        .attr('width', 200)
-        .attr('height', 350)
+        .attr('width', 50)
+        .attr('height', 50)
 
       nodeUpdate.select('text')
         .style('fill-opacity', 1)
@@ -144,13 +139,12 @@ export default {
           return d.target.id
         })
 
-      // link.distance([60])
       // Enter any new links at the parent's previous position.
       link.enter().insert('svg:path', 'g')
         .attr('class', 'link')
         .attr('fill', 'none')
-        .attr('stroke', 'blue')
-        .attr('stroke-width', '1')
+        .attr('stroke', '#ccc')
+        .attr('stroke-width', '2')
         .attr('d', function(d) {
           var o = { x: source.x0, y: source.y0 }
           return diagonal({ source: o, target: o })
@@ -194,25 +188,58 @@ export default {
     },
     getNode(id) {
       // #自定义的一个新的以同步方式从后台取数据的ajax函数
-      var mynodes = mynodes = [{
-        'name': 'DDD',
-        'image': 'https://wx4.sinaimg.cn/mw690/68418ffbly1gc1lt839zbj20u014077s.jpg',
-        'size': '131'
-      }, {
-        'name': 'EEE',
-        'image': 'https://wx1.sinaimg.cn/mw690/90ca507fly1gc1vdlhjfej21400u0wla.jpg',
-        'size': '132'
-      }, {
-        'name': 'FFF',
-        'image': 'https://wx2.sinaimg.cn/mw690/61fd0433ly1gc1xcajkw7j20jg0kudq6.jpg',
-        'size': '133'
-      }]
+      var mynodes = []
+      if (id === '11') {
+        mynodes = [{
+          'name': 'AAA01',
+          'image': '../../../assets/img1.png',
+          'size': '111'
+        }, {
+          'name': 'AAA02',
+          'image': '../../../assets/img2.png',
+          'size': '112'
+        }, {
+          'name': 'AAA03',
+          'image': '../../../assets/img1.png',
+          'size': '113'
+        }]
+      } else if (id === '12') {
+        mynodes = [{
+          'name': 'BBB01',
+          'image': '../../../assets/img1.png',
+          'size': '121'
+        }, {
+          'name': 'BBB02',
+          'image': '../../../assets/img1.png',
+          'size': '122'
+        }, {
+          'name': 'BBB03',
+          'image': '../../../assets/img2.png',
+          'size': '123'
+        }]
+      } else {
+        mynodes = [{
+          'name': 'DDD',
+          'image': '../../../assets/img1.png',
+          'size': '131'
+        }, {
+          'name': 'EEE',
+          'image': '../../../assets/img1.png',
+          'size': '132'
+        }, {
+          'name': 'FFF',
+          'image': '../../../assets/img1.png',
+          'size': '133'
+        }]
+      }
       return mynodes
     }
   }
 }
+
 </script>
 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .register {
   padding-top: 50px;
@@ -221,11 +248,6 @@ export default {
 .tree-svg{
   margin: 0 auto;
   border: 1px solid #f00;
-}
-.link{
-  fill: none;
-  stroke: black;
-  stroke-width: 1.5px;
 }
 
 </style>
