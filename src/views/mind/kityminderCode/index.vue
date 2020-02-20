@@ -4,6 +4,8 @@
     <el-row>
       <el-col :span="4" :offset="2"><el-button size="small" @click="preClick">上一步</el-button></el-col>
       <el-col :span="4"><el-button size="small" @click="nextClick">下一步</el-button></el-col>
+      <el-col :span="6"><a href="https://github.com/fex-team/kityminder-core" target="_blank">kityminder-core网址</a></el-col>
+      <el-col :span="6"><a href="https://github.com/fex-team/kityminder" target="_blank">kityminder网址</a></el-col>
     </el-row>
     <div id="minder-container" />
   </div>

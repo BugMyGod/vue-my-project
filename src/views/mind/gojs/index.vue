@@ -7,6 +7,7 @@
       <el-col :span="4">
         <el-button @click="nextClick">下一步</el-button>
       </el-col>
+      <el-col :span="6"><a href="https://gojs.net/latest/index.html" target="_blank">gojs</a></el-col>
     </el-row>
     <div id="mygoChart" style="width:100%; height:600px; border:1px solid #ccc" />
   </div>

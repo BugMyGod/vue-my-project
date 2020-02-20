@@ -76,16 +76,16 @@ export const constantRoutes = [
         meta: { title: 'GoJs', icon: 'tree' }
       },
       {
-        path: 'joint',
-        name: 'Joint',
-        component: () => import('@/views/mind/joint/index'),
-        meta: { title: 'jointJs', icon: 'tree' }
-      },
-      {
         path: 'd3js',
         name: 'D3js',
         component: () => import('@/views/mind/d3js/index'),
         meta: { title: 'd3Js', icon: 'tree' }
+      },
+      {
+        path: 'joint',
+        name: 'Joint',
+        component: () => import('@/views/mind/joint/index'),
+        meta: { title: 'jointJs', icon: 'tree' }
       }
     ]
   },
