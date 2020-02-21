@@ -89,6 +89,16 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/xterm',
+    component: Layout,
+    children: [{
+      path: 'xterm',
+      name: 'Xterm',
+      component: () => import('@/views/xterm/index'),
+      meta: { title: 'xterm', icon: 'dashboard' }
+    }]
+  },
 
   // {
   //   path: 'external-link',
