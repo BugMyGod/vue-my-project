@@ -1,5 +1,5 @@
 <template>
-  <el-row class="terminal-wrapper">
+  <el-row class="terminal-wrapper" style="overflow-y:auto">
     <el-col :span="23" class="cmd-box">
       <p>
         <code>Ctrl+Ins</code>复制，
@@ -10,9 +10,11 @@
   </el-row>
 </template>
 <script>
-import '../../../node_modules/xterm/css/xterm.css'
-import { Terminal } from 'xterm'
-import { FitAddon } from 'xterm-addon-fit'
+import '../../../node_modules/xterm/dist/xterm.css'
+// import { Terminal } from 'xterm' //  "xterm": "^2.9.2"
+import { Terminal } from '../../../node_modules/xterm/dist/xterm.js' //  "xterm": "^2.9.2"
+import * as fit from 'xterm/lib/addons/fit/fit'
+
 export default {
   name: '',
   components: {},
@@ -21,11 +23,12 @@ export default {
     return {
     }
   },
-  computed: {},
+  computed: {
+  },
   watch: {},
   created() {},
   mounted() {
-    this.initXterm()
+    this.loadTerminal()
   },
   beforeCreate() {},
   beforeMount() {},
@@ -35,26 +38,82 @@ export default {
   destroyed() {},
   activated() {},
   methods: {
-    initXterm() {
-      const terminalContainer = document.getElementById('xterm')
+    /* 终端 */
+    loadTerminal() {
+      // let term
       const term = new Terminal({
         screenKeys: true,
         useStyle: true,
         cursorBlink: true
-      // cols: 92,
-      // rows: 22,
-      // cursorBlink: true, // 光标闪烁
-      // cursorStyle: "underline", // 光标样式  null | 'block' | 'underline' | 'bar'
-      // scrollback: 800, //回滚
-      // tabStopWidth: 8, //制表宽度
-      // screenKeys: true //
       })
-      const fitAddon = new FitAddon()
-      term.loadAddon(fitAddon)
-      term.open(terminalContainer)
-      fitAddon.fit() // 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
-      term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
+      const ws = new WebSocket('ws://127.0.0.1:7912' + '/term')
+      ws.binaryType = 'arraybuffer'
+
+      function ab2str(buf) {
+        return String.fromCharCode.apply(null, new Uint8Array(buf))
+      }
+
+      ws.onopen = (evt) => {
+        console.log('onopen', evt)
+
+        // term = new Terminal({
+        //   screenKeys: true,
+        //   useStyle: true,
+        //   cursorBlink: true
+        // })
+        console.log('term===', term)
+        term.open(this.$refs.xterm, { focus: true })
+
+        term.on('data', data => {
+          console.log('data==', data)
+          ws.send(new TextEncoder().encode('\x00' + data))
+        })
+
+        term.on('resize', evt => {
+          ws.send(new TextEncoder().encode('\x01' + JSON.stringify({
+            cols: evt.cols,
+            rows: evt.rows
+          })))
+        })
+
+        term.on('title', title => {
+          console.log('title', title)
+        })
+
+        term.open(this.$refs.xterm, { focus: true })
+        term.fit()
+        this.term = term
+
+        // // ResizeSensor.min.js自适应大小
+        // new ResizeSensor(this.$refs.xterm, function(e) {
+        //   console.log('Resize', e)
+        //   term.resize()
+        // term.fit()
+        // })
+
+        // const fitAddon = new FitAddon()
+        // term.loadAddon(fitAddon)
+        // fitAddon.fit() // 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
+      }
+
+      ws.onmessage = (evt) => {
+        if (evt.data instanceof ArrayBuffer) {
+          term.write(ab2str(evt.data))
+        } else {
+          alert(evt.data)
+        }
+      }
+
+      ws.onclose = (evt) => {
+        term.write('Session terminated')
+        term.destroy()
+      }
+
+      ws.onerror = (evt) => {
+        console.log(evt)
+      }
     }
+
   }
 }
 </script>
@@ -72,6 +131,9 @@ export default {
   }
   .el-col{
     margin-left: 10px;
+  }
+  .terminal {
+      border: 5px solid black;
   }
 }
 </style>

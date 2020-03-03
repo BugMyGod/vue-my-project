@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "axios": "0.18.1",
+    "css-element-queries": "^1.1.1",
     "element-ui": "2.13.0",
     "gojs": "^2.1.8",
     "jointjs": "^3.1.1",
@@ -28,8 +29,7 @@
     "vue": "2.6.10",
     "vue-router": "3.0.6",
     "vuex": "3.1.0",
-    "xterm": "^4.4.0",
-    "xterm-addon-fit": "^0.3.0"
+    "xterm": "^2.9.2"
   },
   "devDependencies": {
     "@babel/core": "7.0.0",
