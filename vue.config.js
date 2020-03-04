@@ -46,6 +46,12 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
+    },
+    externals: {
+      // 'xterm': 'xterm',
+      // 'fit': 'fit',
+      // 'css-element-queries': 'ResizeSensor'
+      // urlConfig: "urlConfig"
     }
   },
   chainWebpack(config) {

@@ -3,3 +3,7 @@
 3,  http://www.souzhinan.com/kj/116450.html
 4, api:  https://github.com/xtermjs/xterm.js/blob/master/typings/xterm.d.ts
 5, https://www.cdnpkg.com/xterm/2.9.2
+6，vue-cli3 配置externals
+    https://segmentfault.com/q/1010000017056065
+7，外部扩展：https://www.webpackjs.com/configuration/externals/
+8,  外部扩展2: https://www.jianshu.com/p/8adbb5f2f881

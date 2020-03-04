@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/xterm@2.9.2/dist/xterm.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/xterm@2.9.2/dist/addons/fullscreen/fullscreen.min.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/xterm@2.9.2/dist/xterm.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm@2.9.2/dist/addons/fit/fit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/css-element-queries@1.1.1/src/ResizeSensor.min.js"></script>
+    <!-- <script src="<%= BASE_URL %>urlConfig.js"></script> -->
     <title><%= webpackConfig.name %></title>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but <%= webpackConfig.name %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong
+        >We're sorry but <%= webpackConfig.name %> doesn't work properly without
+        JavaScript enabled. Please enable it to continue.</strong
+      >
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->

@@ -40,6 +40,7 @@
 
             ws.onopen = (evt) => {
               console.log('on-open===', evt)
+              console.log('new Terminal==', new Terminal())
               term = new Terminal({
                 screenKeys: true,
                 useStyle: true,
