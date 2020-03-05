@@ -1,62 +1,63 @@
 <template>
-  <el-row class="terminal-wrapper" style="overflow-y:auto">
-    <el-col :span="23" class="cmd-box">
-      <p>
-        <code>Ctrl+Ins</code>复制，
-        <code>Shift+Ins</code>粘贴
-      </p>
-    </el-col>
-    <el-col :span="23">
-      <div id="xterm" ref="xterm" class="xterm-wrapper" />
-    </el-col>
-  </el-row>
+  <div style="height:100%;">
+    <el-row>
+      <el-col>
+        <p>
+          <code>Ctrl+Ins</code>复制，
+          <code>Shift+Ins</code>粘贴
+        </p>
+      </el-col>
+    </el-row>
+    <el-row style="height:100%;">
+      <el-col style="height:100%;"><div ref="xterm" class="xterm" /></el-col>
+    </el-row>
+  </div>
+
 </template>
 <script>
-import '../../../node_modules/xterm/dist/xterm.css'
-// import { Terminal } from 'xterm'
-import { Terminal } from '../../../node_modules/xterm/dist/xterm.js' //  "xterm": "^2.9.2"
-import * as fit from 'xterm/lib/addons/fit/fit'
-
-// // cdn引入
-// import { Terminal } from 'xterm'
-// // import  ResizeSensor from 'ResizeSensor'
-// import * as fit from 'fit'
-
+// import { mapGetters } from 'vuex'
+import { Terminal } from 'xterm'
+import 'xterm/css/xterm.css'
+import { FitAddon } from 'xterm-addon-fit'
 export default {
   name: '',
   components: {},
   props: [],
   data() {
     return {
+      terminal: null,
+      fitAddon: null,
+      address: '127.0.0.1:7912'
     }
   },
   computed: {
+    // ...mapGetters(['deviceCurrent']),
+    // address() {
+    //   let ip = '127.0.0.1:7912' // local test
+    //   if (this.deviceCurrent.model) {
+    //     ip = this.deviceCurrent.model.addrRealDevice
+    //   }
+    //   return ip
+    // }
   },
   watch: {},
   created() {},
   mounted() {
-    setTimeout(() => {
-      this.loadTerminal()
-    }, 2000)
+    this.loadTerminal()
   },
-  beforeCreate() {},
-  beforeMount() {},
-  beforeUpdate() {},
-  updated() {},
-  beforeDestroy() {},
-  destroyed() {},
-  activated() {},
   methods: {
-    /* 终端 */
     loadTerminal() {
-      // let term
-      console.log('new Terminal==', Terminal())
-      let term = new Terminal({
-        screenKeys: true,
-        useStyle: true,
-        cursorBlink: true
+      this.$nextTick(() => {
+        this.loadTerminal2()
       })
-      const ws = new WebSocket('ws://127.0.0.1:7912/term')
+    },
+    /* 终端 */
+    loadTerminal2() {
+      if (this.terminal) {
+        return
+      }
+      let term
+      const ws = new WebSocket('ws://' + this.address + '/term')
       ws.binaryType = 'arraybuffer'
 
       function ab2str(buf) {
@@ -64,39 +65,30 @@ export default {
       }
 
       ws.onopen = (evt) => {
-        console.log('on-open===', evt)
-        // console.log('new Terminal==', new Terminal())
-        // term = new Terminal({
-        //   screenKeys: true,
-        //   useStyle: true,
-        //   cursorBlink: true
-        // })
-        term.on('data', data => {
-          console.log('data===', data)
+        term = new Terminal()
+        this.fitAddon = new FitAddon()
+        term.loadAddon(this.fitAddon)
+
+        term.onData(data => {
+          console.log('onData==>', data)
           ws.send(new TextEncoder().encode('\x00' + data))
         })
 
-        term.on('resize', evt => {
-          console.log('resize===', evt)
+        term.onResize(evt => {
+          console.log('onResize==>', evt)
           ws.send(new TextEncoder().encode('\x01' + JSON.stringify({
             cols: evt.cols,
             rows: evt.rows
           })))
         })
 
-        term.on('title', title => {
+        term.onTitleChange(title => {
           console.log('title', title)
         })
 
-        term.open(this.$refs.xterm, { focus: true })
-        term.fit()
-        this.term = term
-
-        // new ResizeSensor(this.$refs.xterm, function(e) {
-        //   console.log('Resize', e)
-        //   term.resize()
-        //   term.fit()
-        // })
+        term.open(this.$refs.xterm)
+        this.fitAddon.fit()
+        this.terminal = term
       }
 
       ws.onmessage = (evt) => {
@@ -116,27 +108,13 @@ export default {
         console.log(evt)
       }
     }
-
   }
 }
 </script>
 <style lang='scss' scoped>
-.terminal-wrapper {
-  .cmd-box {
-    font-size: 0.75rem;
-    .xterm-wrapper {
-      margin-bottom: 1rem;
-      line-height: 1.2;
-      font-size: 12px;
-      font-family: "Courier New", Courier, monospace;
-      height: 30em;
-    }
-  }
-  .el-col {
-    margin-left: 10px;
-  }
-  .terminal {
-    border: 5px solid black;
-  }
+.xterm {
+  height: 100%;
+  background-color: black;
+  padding-left: 5px;
 }
 </style>
