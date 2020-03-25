@@ -166,7 +166,7 @@ export default {
   destroyed() {},
   activated() {},
   methods: {
-    /* --img-- */
+    /* --img--子元素：阻止事件冒泡-- */
     imgMousedown(e) {
       e.stopPropagation()
       // 按下了任意鼠标按钮时触发
@@ -190,7 +190,7 @@ export default {
       }
     },
     imgRightClick(e) {
-      // e.stopPropagation()
+      e.stopPropagation()
       // console.log('imgRightClick==', e)
       const { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
       this.imgRightPoint = {
@@ -199,17 +199,18 @@ export default {
       }
     },
     imgMousemove(e) {
-      // e.stopPropagation()
+      e.stopPropagation()
       // 鼠标指针在元素内部移动时重复地触发
       // console.log('mousemove==', e)
       const { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
-      // this.imgMovePoints.push({
-      //   x: Math.round(x),
-      //   y: Math.round(y)
-      // })
+      this.imgMovePoints.push({
+        x: Math.round(x),
+        y: Math.round(y)
+      })
     },
     imgContextmenu(e) {
       // 弹出右键菜单
+      e.stopPropagation()
       // console.log('contextmenu==', e)
       this.$message.info('阻止默认右键菜单！')
     },
@@ -245,7 +246,7 @@ export default {
       // console.log('mouseout==', e)
     },
 
-    /* --最外层div-- */
+    /* --最外层div---父元素-- */
     imgBoxMousewheel(e) {
       // console.log('imgBoxMousewheel--', e)
       const { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
@@ -263,7 +264,7 @@ export default {
       }
     },
 
-    /* --img右侧div-- */
+    /* --img右侧div--子元素-- */
     rightDivWheel(e) {
       e.stopPropagation()
       console.log('rightDivWheel--', e)
