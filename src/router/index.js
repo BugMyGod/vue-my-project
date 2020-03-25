@@ -247,6 +247,16 @@ export const constantRoutes = [
       meta: { title: 'Websocket', icon: 'dashboard' }
     }]
   },
+  {
+    path: '/mouseEvent',
+    component: Layout,
+    children: [{
+      path: 'mouseEvent',
+      name: 'MouseEvent',
+      component: () => import('@/views/mouseEvent/index'),
+      meta: { title: '鼠标事件', icon: 'dashboard' }
+    }]
+  },
 
   // {
   //   path: 'external-link',
