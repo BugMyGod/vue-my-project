@@ -54,8 +54,6 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
-  // 脑图
   {
     path: '/mind',
     component: Layout,
@@ -97,6 +95,156 @@ export const constantRoutes = [
       name: 'Xterm',
       component: () => import('@/views/xterm/index'),
       meta: { title: 'xterm', icon: 'dashboard' }
+    }]
+  },
+  {
+    path: '/table',
+    component: Layout,
+    name: 'Table',
+    meta: { title: 'Table', icon: 'example' },
+    children: [
+      {
+        path: 'editTable',
+        name: 'EditTable',
+        component: () => import('@/views/table/editTable/index'),
+        meta: { title: '可编辑table', icon: 'table' }
+      },
+      {
+        path: 'fixedTable',
+        name: 'FixedTable',
+        component: () => import('@/views/table/fixedTable/index'),
+        meta: { title: '固定表头/列', icon: 'table' }
+      },
+      {
+        path: 'mergeTable',
+        name: 'MergeTable',
+        component: () => import('@/views/table/mergeTable/index'),
+        meta: { title: '合并单元格', icon: 'table' }
+      },
+      {
+        path: 'searchTable',
+        name: 'SearchTable',
+        component: () => import('@/views/table/searchTable/index'),
+        meta: { title: '可搜索table', icon: 'table' }
+      },
+      {
+        path: 'treeTable',
+        name: 'TreeTable',
+        component: () => import('@/views/table/treeTable/index'),
+        meta: { title: '树table', icon: 'table' }
+      }
+    ]
+  },
+  {
+    path: '/tree',
+    component: Layout,
+    children: [{
+      path: 'tree',
+      name: 'Tree',
+      component: () => import('@/views/tree/index'),
+      meta: { title: 'Tree', icon: 'dashboard' }
+    }]
+  },
+  {
+    path: '/list',
+    component: Layout,
+    children: [{
+      path: 'dragList',
+      name: 'DragList',
+      component: () => import('@/views/list/dragList/index'),
+      meta: { title: '拖拽列表', icon: 'dashboard' }
+    }]
+  },
+  {
+    path: '/echarts',
+    component: Layout,
+    name: 'Echarts',
+    meta: { title: 'Echarts', icon: 'example' },
+    children: [
+      {
+        path: 'line',
+        name: 'Line',
+        component: () => import('@/views/echarts/line/index'),
+        meta: { title: '折线图', icon: 'dashboard' }
+      },
+      {
+        path: 'bar',
+        name: 'Bar',
+        component: () => import('@/views/echarts/bar/index'),
+        meta: { title: '柱状图', icon: 'dashboard' }
+      },
+      {
+        path: 'pie',
+        name: 'Pie',
+        component: () => import('@/views/echarts/pie/index'),
+        meta: { title: '饼图', icon: 'dashboard' }
+      },
+      {
+        path: 'radar',
+        name: 'Radar',
+        component: () => import('@/views/echarts/radar/index'),
+        meta: { title: '雷达图', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/file',
+    component: Layout,
+    name: 'File',
+    meta: { title: 'File', icon: 'example' },
+    children: [
+      {
+        path: 'download',
+        name: 'Download',
+        component: () => import('@/views/file/download/index'),
+        meta: { title: '下载', icon: 'dashboard' }
+      },
+      {
+        path: 'export',
+        name: 'Export',
+        component: () => import('@/views/file/export/index'),
+        meta: { title: '导出', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/picture',
+    component: Layout,
+    children: [{
+      path: 'carouselPicture',
+      name: 'CarouselPicture',
+      component: () => import('@/views/picture/carouselPicture/index'),
+      meta: { title: '带缩略图轮播', icon: 'dashboard' }
+    }]
+  },
+  {
+    path: '/canvas',
+    component: Layout,
+    children: [{
+      path: 'canvas',
+      name: 'Canvas',
+      component: () => import('@/views/canvas/index'),
+      meta: { title: 'canvas', icon: 'dashboard' }
+    }]
+  },
+  {
+    path: '/animation',
+    component: Layout,
+    children: [{
+      path: 'animation',
+      name: 'Animation',
+      component: () => import('@/views/animation/index'),
+      meta: { title: 'animation', icon: 'dashboard' }
+    }]
+  },
+  {
+    path: '/websocket',
+    component: Layout,
+    children: [{
+      path: 'websocket',
+      name: 'Websocket',
+      component: () => import('@/views/websocket/index'),
+      meta: { title: 'Websocket', icon: 'dashboard' }
     }]
   },
 

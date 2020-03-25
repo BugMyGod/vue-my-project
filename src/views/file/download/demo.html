@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>测试JSZIP</title>
+</head>
+<body>
+    <input type="file" id="file"/>
+    <img src="" id="image">
+</body>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/jszip.js"></script>
+<script type="text/javascript" src="js/cropper.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $("#file").change(function () {
+            var file = this.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            var base64 = "";
+            reader.onload = function () {
+                var imgData = this.result;
+                $("#image").attr("src", imgData);
+
+                var zip = new JSZip();
+                // 向zip文件中添加图片，可以添加多个文件或者图片，此处以图片为例
+                // base64图片需要去掉base64图片标识
+                zip.file("car.jpg", imgData.substring(imgData.indexOf(",") + 1), {base64: true});
+                zip.generateAsync({
+                        type: "blob",  // 压缩类型
+                        compression: "DEFLATE",      // STORE：默认不压缩 DEFLATE：需要压缩
+                        compressionOptions: {
+                            level: 9  // 压缩等级1~9    1压缩速度最快，9最优压缩方式
+                            // [使用一张图片测试之后1和9压缩的力度不大，相差100字节左右]
+                        }
+                    })
+                   .then(function (content) {
+                    // 压缩的结果为blob类型（二进制流）,可用作文件上传
+                    console.info(content);
+                    // 直接在浏览器打成car.zip包并下载，saveAs依赖的js是FileSaver.js
+                    saveAs(content, "car.zip");
+                });
+            }
+        });
+    });
+</script>
+</html>
