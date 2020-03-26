@@ -47,28 +47,38 @@
       <el-col
         :span="10"
         class="img-box"
-        @mousewheel.native="imgBoxMousewheel"
-        @mousedown.native="imgBoxMousedown"
+        @mousewheel.stop
+        @mousedown.stop
       >
+        <!-- @mousewheel.native="imgBoxMousewheel"
+        @mousedown.native="imgBoxMousedown" -->
         <p>img-box <el-button size="mini" @click="clearAll">clear all</el-button></p>
+        <p>input: <el-input v-model="input" style="width:80%" @keyup.native="inputKeyUp" /></p>
+
         <el-col :span="24">
           <el-col :span="14" class="img-box-double">
             <img
               ref="imgRef"
               src="../../assets/miao.jpeg"
               alt
+              tabindex="0"
               @mousedown="imgMousedown"
               @mouseup="imgMouseup"
-              @click="imgClick"
-              @click.right.prevent="imgRightClick"
+              @click.exact="imgClick($event)"
+              @click.right.exact.prevent="imgRightClick"
               @dblclick.prevent="imgDblclick"
+
               @mouseenter="imgMouseenter"
               @mouseleave="imgMouseleave"
               @mousemove="imgMousemove"
               @contextmenu.prevent="imgContextmenu"
-              @mousewheel="imgMousewheel"
+              @mousewheel.prevent="imgMousewheel"
               @mouseover="imgMouseover"
               @mouseout="imgMouseout"
+
+              @keydown.prevent="imgKeyDown"
+              @keyup.prevent="imgKeyUp"
+              @keypress.prevent="imgKeyPress"
             >
           </el-col>
           <el-col
@@ -77,18 +87,20 @@
             @mousewheel.native="rightDivWheel"
             @mousedown.native="rightDivMousedown"
           >
-            <p>div1</p>
-            <p>div2</p>
-            <p>div3</p>
-            <p>div4</p>
-            <p>div5</p>
-            <p>div6</p>
-            <p>div7</p>
-            <p>div8</p>
-            <p>div9</p>
-            <p>div10</p>
-            <p>div11</p>
-            <p>div12</p>
+            <div class="div-p">
+              <p>div1</p>
+              <p>div2</p>
+              <p>div3</p>
+              <p>div4</p>
+              <p>div5</p>
+              <p>div6</p>
+              <p>div7</p>
+              <p>div8</p>
+              <p>div9</p>
+              <p>div10</p>
+              <p>div11</p>
+              <p>div12</p>
+            </div>
           </el-col>
         </el-col>
         <el-col
@@ -151,13 +163,52 @@ export default {
       imgBoxDownPoint: {},
       imgBoxWheelPoints: [],
       rightDivWheelPoints: [],
-      rightDivDownPoint: {}
+      rightDivDownPoint: {},
+      input: ''
     }
   },
   computed: {},
   watch: {},
-  created() {},
-  mounted() {},
+  created() {
+    // var _this = this
+    // document.onkeydown = function(e) {
+    //   const key = window.event.keyCode
+    //   console.log('onkeydown--e: ', e)
+    //   console.log('key-down--key: ', key)
+    //   // if (key === 13) {
+    //   //   _this.imgKeyDown(e)
+    //   //   // _this.imgClick(e)
+    //   // }
+    // }
+    // document.onkeyup = function(e) {
+    //   const key = window.event.keyCode
+    //   console.log('onkeyup--e: ', e)
+    //   console.log('key-up--key: ', key)
+    //   // if (key === 13) {
+    //   //   _this.imgKeyUp(e)
+    //   // }
+    // }
+    // document.onkeypress = function(e) {
+    //   const key = window.event.keyCode
+    //   console.log('onkeyup--e: ', e)
+    //   console.log('key-press--key: ', key)
+    //   // if (key === 13) {
+    //   //   _this.imgKeyPress(e)
+    //   // }
+    // }
+  },
+  mounted() {
+    // /* 鼠标滑轮事件兼容性处理 */
+    // if (document.addEventListener) {
+    //   console.log('123---', document.addEventListener)
+    //   document.addEventListener('DOMMouseScroll', this.imgMousewheel, true)
+    //   document.addEventListener('keydown', this.imgKeyDown, false)
+    //   document.addEventListener('keyup', this.imgKeyDown, false)
+    // }// 火狐
+    // window.onmousewheel = document.onmousewheel = this.imgMousewheel// IE/Opera/Chrome
+    // window.onkeydown = document.onkeydown = this.imgKeyDown// IE/Opera/Chrome
+    // window.onkeyup = document.onkeyup = this.imgKeyUp// IE/Opera/Chrome
+  },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},
@@ -170,7 +221,7 @@ export default {
     imgMousedown(e) {
       e.stopPropagation()
       // 按下了任意鼠标按钮时触发
-      // console.log('mousedown==', e)
+      console.log('mousedown==', e)
       let { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
       x = Math.round(x)
       y = Math.round(y)
@@ -182,7 +233,7 @@ export default {
     imgMouseup(e) {
       e.stopPropagation()
       // 释放鼠标按钮时触发
-      // console.log('mouseup==', e)
+      console.log('mouseup==', e)
       const { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
       this.imgUpPoint = {
         x: Math.round(x),
@@ -202,27 +253,46 @@ export default {
       e.stopPropagation()
       // 鼠标指针在元素内部移动时重复地触发
       // console.log('mousemove==', e)
-      const { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
-      this.imgMovePoints.push({
-        x: Math.round(x),
-        y: Math.round(y)
-      })
+      // const { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
+      // this.imgMovePoints.push({
+      //   x: Math.round(x),
+      //   y: Math.round(y)
+      // })
     },
     imgContextmenu(e) {
       // 弹出右键菜单
+      // e.preventDefault()
       e.stopPropagation()
       // console.log('contextmenu==', e)
       this.$message.info('阻止默认右键菜单！')
     },
     imgMousewheel(e) {
+      // console.log('111=====', e)
+      e.preventDefault()
       e.stopPropagation()
-      // 鼠标滚轮事件
-      // console.log('mousewheel==', e)
-      const { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
-      this.imgWheelPoints.push({
-        x: Math.round(x),
-        y: Math.round(y)
-      })
+      /*
+        鼠标滚轮事件: 滑轮方向
+        火狐：e.detail（向上：-1；向下：1）
+        其他：e.wheelDelta（向上：3(倍数)；向下：-3）
+      */
+      console.log('mousewheel--wheelDelta--', e.wheelDelta, 'detail--', e.detail)
+      // const { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
+      // this.imgWheelPoints.push({
+      //   x: Math.round(x),
+      //   y: Math.round(y)
+      // })
+    },
+    imgKeyDown(e) {
+      console.log('Down==', e.code, e)
+    },
+    imgKeyUp(e) {
+      console.log('up===', e.code, e)
+    },
+    imgKeyPress(e) {
+      console.log('press---', e.code, e)
+    },
+    inputKeyUp(e) {
+      console.log('input--key--up', e.code, e)
     },
 
     imgClick(e) {
@@ -267,7 +337,7 @@ export default {
     /* --img右侧div--子元素-- */
     rightDivWheel(e) {
       e.stopPropagation()
-      console.log('rightDivWheel--', e)
+      // console.log('rightDivWheel--', e)
       const { x, y } = this.windowToCanvas(e.clientX, e.clientY, e)
       this.rightDivWheelPoints.push({
         x: Math.round(x),
@@ -354,12 +424,17 @@ export default {
       height: 500px;
       overflow: auto;
       .img-box-double{
-        background: palegreen;
-        height: 350px;
+        height: 300px;
         overflow: auto;
+        background: rgb(149, 181, 185);
+        outline:none;
         img {
           width: 300px;
           height: 350px;
+          outline:none;
+        }
+        .div-p{
+          background: palegreen;
         }
       }
     }
