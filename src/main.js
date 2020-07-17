@@ -17,6 +17,10 @@ import '@/permission' // permission control
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 
+import jsoneditor from 'jsoneditor'
+import 'jsoneditor/dist/jsoneditor.min.css'
+Vue.prototype.$jsoneditor = jsoneditor
+
 Vue.use(Viewer, {
   defaultOptions: {
     zIndex: 9999

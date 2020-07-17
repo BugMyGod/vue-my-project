@@ -1,12 +1,26 @@
 <template>
-  <div class="">tree</div>
+  <div class="">
+    <p>jsoneditor</p>
+    <json-editor :value="jsonValue" />
+  </div>
 </template>
 
 <script>
+import JsonEditor from '@/components/JsonEditor'
 export default {
-  components: {},
+  components: {
+    JsonEditor
+  },
   data() {
     return {
+      jsonValue: {
+        'Array': [1, 2, 3],
+        'Boolean': true,
+        'Null': null,
+        'Number': 123,
+        'Object': { 'a': 'b', 'c': 'd' },
+        'String': 'Hello World'
+      }
     }
   },
   computed: {},
